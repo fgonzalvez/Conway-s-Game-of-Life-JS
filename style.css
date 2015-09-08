@@ -1,0 +1,16 @@
+#wrapper {
+	width: 120px;
+	margin: 0 auto;
+	background-color: grey;
+}
+
+.cell {
+	float: left;
+	width: 10px;
+	height: 10px;
+	border: solid 1px black;
+}
+
+#start-button {
+	margin-left: 20px;
+}
