@@ -17,22 +17,28 @@ Array.matrix = function (m, n, initial) {
 
 var options = {
 	gridContainer : "wrapper",
-	cellClass : "cell"
+	cellClass : "cell",
+	deadCellColor : "white",
+	aliveCellColor : "red"
 };
 
 var Cell = function(grid) {
 	var parent = grid;
-	this.domObject = document.createElement('div');
-	this.domObject.className = 'cell';
+	this.domObject = document.createElement("div");
+	this.domObject.className = options.cellClass;
+  this.domObject.model = this;
 	this.alive = false;
+
+	this.kill = function() {
+		this.domObject.style.backgroundColor = options.deadCellColor;
+		this.alive = false;	
+	};
+	this.revive = function() {
+		this.domObject.style.backgroundColor = options.aliveCellColor;
+		this.alive = true;
+	};
 	this.domObject.onclick = function() { 
-		if(this.alive) {
-			this.style.backgroundColor = "white";
-			this.alive = false;	
-		} else {
-			this.style.backgroundColor = "red";
-			this.alive = true;			
-		}
+		this.model.alive ? this.model.kill() : this.model.revive();
 	};
 };
 
@@ -49,35 +55,51 @@ var Grid = function(x, y) {
 			}
 		}
 	}
+  this.getNeighbourgs = function(x, y) {
+    var total = 0;
+    if(this.cellGrid[x - 1][y].alive) total++;
+    if(this.cellGrid[x + 1][y].alive) total++;
+    if(this.cellGrid[x][y - 1].alive) total++;
+    if(this.cellGrid[x][y + 1].alive) total++;
+    if(this.cellGrid[x + 1][y + 1].alive) total++;
+    if(this.cellGrid[x - 1][y - 1].alive) total++;
+    if(this.cellGrid[x + 1][y - 1].alive) total++;
+    if(this.cellGrid[x - 1][y + 1].alive) total++;
+
+    return total;
+  }
 	this.simulate = function() {
-	for(var i = 0; i < x; i++) {
-		for(var j = 0; j < y; j++) {
-			
+    var n = 0;
+		for(var i = 0; i < x; i++) {
+			for(var j = 0; j < y; j++) {
+		  	this.cellGrid[i][j].alive ? this.cellGrid[i][j].kill() : this.cellGrid[i][j].revive(); 
+        n = getNeighbourgs(i,j);
+        if(this.cellGrid[i][j].alive && (1 > n || n > 4 )) this.cellGrid[i][j].kill();
+        else if(!this.cellGrid[i][j].alive && n==3) this.cellGrid[i][j].revive();
+			}
 		}
-	}
 	}
 };
 
 function stopSimulation() {
 	id("start-button").innerHTML = "Start";
-	id("start-button").onclick = function() {simulate(grid)};
+	id("start-button").onclick = function() { simulate(grid) };
 	clearInterval(interval);
 };
 
 function simulate(grid) {
 	id("start-button").innerHTML = "Stop";
-	id("start-button").onclick = function() {stopSimulation()};
+	id("start-button").onclick = function() { stopSimulation() };
 	interval = setInterval(function() {
-		/*for(var i = 0; i < grid.x; i++) {
-			for(var j = 0; j < grid.y; j++) {
-				if(grid.cellGrid[i][j])
-			}
-		}*/
 		grid.simulate();
 	}, 1000);
 };
 
+var gridWidth = 10;
+var gridHeight = 10;
+var grid = new Grid(gridHeight, gridWidth);
+
 window.onload = function() {
-	var grid = Grid(10,10);
+	grid.init();
 	id("start-button").onclick = function() {simulate(grid)};
 };
