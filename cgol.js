@@ -99,7 +99,7 @@ var Grid = function(x, y) {
 	}
 };
 
-function stopSimulation() {
+function stopSimulation(grid) {
 	id("start-button").innerHTML = "Start";
 	id("start-button").onclick = function() { simulate(grid) };
 	clearInterval(interval);
@@ -107,17 +107,22 @@ function stopSimulation() {
 
 function simulate(grid) {
 	id("start-button").innerHTML = "Stop";
-	id("start-button").onclick = function() { stopSimulation() };
+	id("start-button").onclick = function() { stopSimulation(grid) };
 	interval = setInterval(function() {
 		grid.simulate();
-	}, 1000);
+	}, 500);
 };
 
-var gridWidth = 10;
-var gridHeight = 10;
-var grid = new Grid(gridHeight, gridWidth);
+function createGrid() {
+  gridWidth = document.getElementById("y-value").value;
+  console.log(gridWidth);
+  gridHeight = document.getElementById("x-value").value;
+  console.log(gridHeight);
+  grid = new Grid(gridHeight, gridWidth);
+  grid.init();
+};
 
 window.onload = function() {
-	grid.init();
 	id("start-button").onclick = function() {simulate(grid)};
+  id("create-button").onclick = function() {createGrid()};
 };
