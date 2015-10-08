@@ -57,29 +57,10 @@ var Grid = function(x, y) {
 	}
   this.getNeighbourgs = function(x, y) {
     var total = 0;
-    if(x!=0) {
-      if(this.cellGrid[x - 1][y].alive) total++;
-      if(y!=0) {
-        if(this.cellGrid[x - 1][y - 1].alive) total++;
+    for(var i = Math.max(0, y - 1); i <= Math.min(gridWidth - 1, y + 1); i++) {
+      for(var j = Math.max(0, x - 1); j <= Math.min(gridHeight - 1, x + 1); j++) {
+        if(!(j == x && i == y) && this.cellGrid[j][i].alive) total++;
       }
-      if(y!=gridWidth-1){
-        if(this.cellGrid[x - 1][y + 1].alive) total++;
-        if(x!=gridHeight-1) {
-          if(this.cellGrid[x + 1][y + 1].alive) total++;
-        }
-      }
-    }
-    if(y!=0) {
-      if(this.cellGrid[x][y - 1].alive) total++;
-      if(x!=gridHeight-1) {
-        if(this.cellGrid[x + 1][y - 1].alive) total++;
-      }
-    }
-    if(x!=gridHeight-1) {
-      if(this.cellGrid[x + 1][y].alive) total++;
-    }
-    if(y!=gridWidth-1) {
-      if(this.cellGrid[x][y + 1].alive) total++;
     }
     return total;
   }
@@ -92,7 +73,7 @@ var Grid = function(x, y) {
 		}
     for(var i = 0; i < x; i++) {
       for(var j = 0; j < y; j++) {
-        if(this.cellGrid[i][j].alive && (2 > this.cellGrid[i][j].neighbourgs || this.cellGrid[i][j].neighbourgs > 4 )) this.cellGrid[i][j].kill();
+        if(this.cellGrid[i][j].alive && (2 > this.cellGrid[i][j].neighbourgs || this.cellGrid[i][j].neighbourgs > 3 )) this.cellGrid[i][j].kill();
         else if(!this.cellGrid[i][j].alive && this.cellGrid[i][j].neighbourgs==3) this.cellGrid[i][j].revive();
       }
     }
