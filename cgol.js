@@ -56,28 +56,28 @@ var Grid = function(x, y) {
 		}
 	}
   this.getNeighbourgs = function(x, y) {
-    var total = 0;
-    for(var i = Math.max(0, y - 1); i <= Math.min(gridWidth - 1, y + 1); i++) {
-      for(var j = Math.max(0, x - 1); j <= Math.min(gridHeight - 1, x + 1); j++) {
-        if(!(j == x && i == y) && this.cellGrid[j][i].alive) total++;
-      }
-    }
-    return total;
+	var total = 0;
+	for(var i = Math.max(0, y - 1); i <= Math.min(gridWidth - 1, y + 1); i++) {
+	  for(var j = Math.max(0, x - 1); j <= Math.min(gridHeight - 1, x + 1); j++) {
+		if(!(j == x && i == y) && this.cellGrid[j][i].alive) total++;
+	  }
+	}
+	return total;
   }
-	this.simulate = function() {
-    var n = 0;
+  this.simulate = function() {
+	var n = 0;
 		for(var i = 0; i < x; i++) {
 			for(var j = 0; j < y; j++) {
-        this.cellGrid[i][j].neighbourgs = this.getNeighbourgs(i,j);
+		this.cellGrid[i][j].neighbourgs = this.getNeighbourgs(i,j);
 			}
 		}
-    for(var i = 0; i < x; i++) {
-      for(var j = 0; j < y; j++) {
-        if(this.cellGrid[i][j].alive && (2 > this.cellGrid[i][j].neighbourgs || this.cellGrid[i][j].neighbourgs > 3 )) this.cellGrid[i][j].kill();
-        else if(!this.cellGrid[i][j].alive && this.cellGrid[i][j].neighbourgs==3) this.cellGrid[i][j].revive();
-      }
-    }
+	for(var i = 0; i < x; i++) {
+	  for(var j = 0; j < y; j++) {
+		if(this.cellGrid[i][j].alive && (2 > this.cellGrid[i][j].neighbourgs || this.cellGrid[i][j].neighbourgs > 3 )) this.cellGrid[i][j].kill();
+		else if(!this.cellGrid[i][j].alive && this.cellGrid[i][j].neighbourgs==3) this.cellGrid[i][j].revive();
+	  }
 	}
+  }
 };
 
 function stopSimulation(grid) {
@@ -88,22 +88,23 @@ function stopSimulation(grid) {
 
 function simulate(grid) {
 	id("start-button").innerHTML = "Stop";
-	id("start-button").onclick = function() { stopSimulation(grid) };
-	interval = setInterval(function() {
+  id("start-button").onclick = function() { stopSimulation(grid) };
+  interval = setInterval(function() {
 		grid.simulate();
 	}, 500);
 };
 
 function createGrid() {
-  gridWidth = document.getElementById("y-value").value;
-  console.log(gridWidth);
-  gridHeight = document.getElementById("x-value").value;
-  console.log(gridHeight);
+  //gridWidth = document.getElementById("y-value").value;
+  gridWidth = 30;
+  //gridHeight = document.getElementById("x-value").value;
+  gridHeight = 30;
   grid = new Grid(gridHeight, gridWidth);
   grid.init();
 };
 
 window.onload = function() {
-	id("start-button").onclick = function() {simulate(grid)};
-  id("create-button").onclick = function() {createGrid()};
+  id("start-button").onclick = function() {simulate(grid)};
+  createGrid();
+  //id("create-button").onclick = function() {createGrid()};
 };
